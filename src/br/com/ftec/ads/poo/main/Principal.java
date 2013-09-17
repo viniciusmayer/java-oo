@@ -53,8 +53,8 @@ public class Principal {
 	private static void importar(List<Usuario> usuarios, String nomeArquivo, Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Importar usuarios");
-		System.out.print("-> Todos os usuarios existentes serao deletados.");
-		System.out.println("-> Confirmar a operacao? [sim]: ");
+		System.out.println("-> Todos os usuarios existentes serao deletados.");
+		System.out.print("-> Confirmar a operacao? [sim]: ");
 		String confirmar = scanner.nextLine();
 		if (!confirmar.equalsIgnoreCase("sim")) {
 			System.out.println("-> Operacao cancelada");
@@ -81,6 +81,7 @@ public class Principal {
 				Usuario usuario = new Usuario(email, senha);
 				usuarios.add(usuario);
 			}
+			System.out.println("-> Usuarios importados com sucesso");
 		} catch (IOException e) {
 			System.out.println("-> Erro ao importar usuarios (ler arquivo): ");
 			e.printStackTrace();
