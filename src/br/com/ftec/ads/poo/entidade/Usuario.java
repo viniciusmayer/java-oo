@@ -1,6 +1,8 @@
 package br.com.ftec.ads.poo.entidade;
 
-public class Usuario {
+import br.com.ftec.ads.poo.util.Utilitarios;
+
+public class Usuario extends Entidade {
 
 	private String email;
 	private String senha;
@@ -9,7 +11,8 @@ public class Usuario {
 	}
 
 	public Usuario(String email, String senha) {
-		super();
+		long nextLong = Utilitarios.nextLong();
+		this.setId(nextLong);
 		this.email = email;
 		this.senha = senha;
 	}
@@ -32,6 +35,9 @@ public class Usuario {
 
 	public String imprimir() {
 		String imprimir = "";
+		imprimir += "Id: ";
+		imprimir += this.getId();
+		imprimir += "\n";
 		imprimir += "Email: ";
 		imprimir += this.email;
 		imprimir += "\n";
@@ -43,6 +49,8 @@ public class Usuario {
 
 	public String exportar() {
 		String exportar = "";
+		exportar += this.getId();
+		exportar += ";";
 		exportar += this.email;
 		exportar += ";";
 		exportar += this.senha;

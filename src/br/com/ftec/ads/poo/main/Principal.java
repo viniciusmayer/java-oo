@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import br.com.ftec.ads.poo.entidade.Exportavel;
+import br.com.ftec.ads.poo.entidade.Livro;
 import br.com.ftec.ads.poo.entidade.Usuario;
 
 public class Principal {
@@ -18,13 +20,18 @@ public class Principal {
 	public static void main(String[] args) {
 
 		List<Usuario> usuarios = new ArrayList<Usuario>();
+		List<Livro> livros = new ArrayList<Livro>();
+		List<Exportavel> paraExportar = null;
 		Scanner scanner = new Scanner(System.in);
 		String opcao = null;
 		do {
 			opcao = menu(scanner);
 			switch (opcao) {
 			case "1":
-				criar(usuarios, scanner);
+				criarUsuario(usuarios, scanner);
+				break;
+			case "11":
+				criarLivro(livros, scanner);
 				break;
 			case "2":
 				listar(usuarios);
@@ -39,7 +46,12 @@ public class Principal {
 				deletar(usuarios, scanner);
 				break;
 			case "6":
-				exportar(usuarios, "arquivos/usuarios.csv");
+				paraExportar = new ArrayList<Exportavel>(usuarios);
+				exportar(paraExportar, "arquivos/usuarios.csv");
+				break;
+			case "66":
+				paraExportar = new ArrayList<Exportavel>(livros);
+				exportar(paraExportar, "arquivos/livros.csv");
 				break;
 			case "7":
 				importar(usuarios, "arquivos/usuarios.csv", scanner);
@@ -50,7 +62,8 @@ public class Principal {
 		} while (!opcao.equals("0"));
 	}
 
-	private static void importar(List<Usuario> usuarios, String nomeArquivo, Scanner scanner) {
+	private static void importar(List<Usuario> usuarios, String nomeArquivo,
+			Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Importar usuarios");
 		System.out.println("-> Todos os usuarios existentes serao deletados.");
@@ -61,13 +74,14 @@ public class Principal {
 			return;
 		}
 		usuarios.clear();
-		System.out.println("-> Usuarios deletados com sucesso");				
+		System.out.println("-> Usuarios deletados com sucesso");
 		File file = new File(nomeArquivo);
 		FileReader fileReader = null;
 		try {
 			fileReader = new FileReader(file);
 		} catch (FileNotFoundException e) {
-			System.out.println("-> Erro ao importar usuarios (arquivo nao encontrado): ");
+			System.out
+					.println("-> Erro ao importar usuarios (arquivo nao encontrado): ");
 			e.printStackTrace();
 			return;
 		}
@@ -88,9 +102,9 @@ public class Principal {
 		}
 	}
 
-	private static void exportar(List<Usuario> usuarios, String nomeArquivo) {
+	private static void exportar(List<Exportavel> objetos, String nomeArquivo) {
 		System.out.println();
-		System.out.println("=> Exportar usuarios");
+		System.out.println("=> Exportar objetos");
 		File file = new File(nomeArquivo);
 		FileWriter fileWriter = null;
 		try {
@@ -102,8 +116,8 @@ public class Principal {
 		}
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 		try {
-			for (Usuario usuario : usuarios) {
-				bufferedWriter.write(usuario.exportar());
+			for (Exportavel exportavel : objetos) {
+				bufferedWriter.write(exportavel.exportar());
 			}
 		} catch (IOException e) {
 			System.err.println("-> Erro ao exportar (escrever no arquivo): ");
@@ -112,7 +126,8 @@ public class Principal {
 		}
 		try {
 			bufferedWriter.close();
-			System.out.println("-> Usuarios exportados com sucesso");
+			System.out.println("-> Objetos exportados com sucesso: "
+					+ file.getAbsolutePath());
 		} catch (IOException e) {
 			System.err.println("-> Erro ao exportar (salvar o arquivo): ");
 			e.printStackTrace();
@@ -188,7 +203,7 @@ public class Principal {
 		}
 	}
 
-	private static void criar(List<Usuario> usuarios, Scanner scanner) {
+	private static void criarUsuario(List<Usuario> usuarios, Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Criar usuario");
 		System.out.print("-> Email: ");
@@ -206,15 +221,29 @@ public class Principal {
 		System.out.println("-> Usuario criado com sucesso");
 	}
 
+	private static void criarLivro(List<Livro> livros, Scanner scanner) {
+		System.out.println();
+		System.out.println("=> Criar livro");
+		System.out.print("-> Titulo: ");
+		String tituto = scanner.nextLine();
+		System.out.print("-> Autor: ");
+		String autor = scanner.nextLine();
+		Livro livro = new Livro(tituto, autor);
+		livros.add(livro);
+		System.out.println("-> Livro criado com sucesso");
+	}
+
 	private static String menu(Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Menu");
 		System.out.println("1. Criar usuario");
+		System.out.println("11. Criar livro");
 		System.out.println("2. Listar usuarios");
 		System.out.println("3. Deletar todos os usuarios");
 		System.out.println("4. Pesquisar usuarios");
 		System.out.println("5. Deletar usuarios");
 		System.out.println("6. Exportar usuarios");
+		System.out.println("66. Exportar livros");
 		System.out.println("7. Importar usuarios");
 		System.out.println("0. Sair");
 		System.out.print("-> Digite a opcao desejada: ");
