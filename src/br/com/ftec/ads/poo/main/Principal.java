@@ -21,7 +21,7 @@ public class Principal {
 
 		List<Usuario> usuarios = new ArrayList<Usuario>();
 		List<Livro> livros = new ArrayList<Livro>();
-		List<Exportavel> paraExportar = null;
+		List<Exportavel> objetosExportaveis = null;
 		Scanner scanner = new Scanner(System.in);
 		String opcao = null;
 		do {
@@ -34,10 +34,18 @@ public class Principal {
 				criarLivro(livros, scanner);
 				break;
 			case "2":
-				listar(usuarios);
+				objetosExportaveis = new ArrayList<Exportavel>(usuarios);
+				listar(objetosExportaveis);
+				break;
+			case "22":
+				objetosExportaveis = new ArrayList<Exportavel>(livros);
+				listar(objetosExportaveis);
 				break;
 			case "3":
 				deletarTodos(usuarios, scanner);
+				break;
+			case "33":
+				deletarTodos(livros, scanner);
 				break;
 			case "4":
 				pesquisar(usuarios, scanner);
@@ -46,12 +54,12 @@ public class Principal {
 				deletar(usuarios, scanner);
 				break;
 			case "6":
-				paraExportar = new ArrayList<Exportavel>(usuarios);
-				exportar(paraExportar, "arquivos/usuarios.csv");
+				objetosExportaveis = new ArrayList<Exportavel>(usuarios);
+				exportar(objetosExportaveis, "arquivos/usuarios.csv");
 				break;
 			case "66":
-				paraExportar = new ArrayList<Exportavel>(livros);
-				exportar(paraExportar, "arquivos/livros.csv");
+				objetosExportaveis = new ArrayList<Exportavel>(livros);
+				exportar(objetosExportaveis, "arquivos/livros.csv");
 				break;
 			case "7":
 				importar(usuarios, "arquivos/usuarios.csv", scanner);
@@ -178,28 +186,28 @@ public class Principal {
 		}
 	}
 
-	private static void deletarTodos(List<Usuario> usuarios, Scanner scanner) {
+	private static void deletarTodos(List objetos, Scanner scanner) {
 		System.out.println();
-		System.out.println("=> Deletar todos os usuarios");
+		System.out.println("=> Deletar todos os objetos");
 		System.out.print("-> Confirmar a operacao? [sim]: ");
 		String confirmar = scanner.nextLine();
 		if (!confirmar.equalsIgnoreCase("sim")) {
 			System.out.println("-> Operacao cancelada");
 			return;
 		}
-		usuarios.clear();
-		System.out.println("-> Usuarios deletados com sucesso");
+		objetos.clear();
+		System.out.println("-> Objetos deletados com sucesso");
 	}
-
-	private static void listar(List<Usuario> usuarios) {
+	
+	private static void listar(List<Exportavel> objetos) {
 		System.out.println();
-		System.out.println("=> Listar usuarios");
-		if (usuarios.isEmpty()) {
+		System.out.println("=> Listar objetos");
+		if (objetos.isEmpty()) {
 			System.out.println("-> Nenhum usuario encontrado");
 			return;
 		}
-		for (Usuario usuario : usuarios) {
-			System.out.println(usuario.imprimir());
+		for (Exportavel exportavel: objetos) {
+			System.out.println(exportavel.imprimir());
 		}
 	}
 
@@ -239,7 +247,9 @@ public class Principal {
 		System.out.println("1. Criar usuario");
 		System.out.println("11. Criar livro");
 		System.out.println("2. Listar usuarios");
+		System.out.println("22. Listar livros");
 		System.out.println("3. Deletar todos os usuarios");
+		System.out.println("33. Deletar todos os livros");
 		System.out.println("4. Pesquisar usuarios");
 		System.out.println("5. Deletar usuarios");
 		System.out.println("6. Exportar usuarios");

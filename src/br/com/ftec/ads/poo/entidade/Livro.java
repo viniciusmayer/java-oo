@@ -33,6 +33,20 @@ public class Livro extends Entidade {
 		this.autor = autor;
 	}
 
+	public String imprimir() {
+		String imprimir = "";
+		imprimir += "Id: ";
+		imprimir += this.getId();
+		imprimir += "\n";
+		imprimir += "Titulo: ";
+		imprimir += this.titulo;
+		imprimir += "\n";
+		imprimir += "Autor: ";
+		imprimir += this.autor;
+		imprimir += "\n";
+		return imprimir;
+	}
+
 	public String exportar() {
 		String exportar = "";
 		exportar += this.getId();
