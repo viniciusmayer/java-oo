@@ -1,7 +1,5 @@
 package br.com.ftec.ads.poo.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,36 +8,26 @@ import java.util.List;
 
 import br.com.ftec.ads.poo.entidade.Usuario;
 
-public class UsuarioDAO {
+public class UsuarioDAO extends BaseDAO{
 
-	private Connection getConnection() throws ClassNotFoundException, SQLException{
-		/*
-		 * CARREGAR O DRIVER DO BANCO DE DADOS UTILIZADO
-		 */
-		try {
-			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw e;
+	private static UsuarioDAO usuarioDAO;
+
+	/*
+	 * factory method
+	 */
+	public static UsuarioDAO getInstance(){
+		if (usuarioDAO == null){
+			usuarioDAO = new UsuarioDAO();
 		}
-		
-		/*
-		 * ESTABELECER A CONEXAO COM O BANCO DE DADOS
-		 */
-		Connection connection = null;
-		try {
-			connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/poodb", "poouser", "poopassword");
-			return connection;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw e;
-		}
+		return usuarioDAO;
 	}
+	
+	private UsuarioDAO() {}	
 	
 	public Integer inserir(Usuario usuario) throws SQLException, ClassNotFoundException{
 		PreparedStatement prepareStatement = null;
 		try {
-			prepareStatement = this.getConnection().prepareStatement("insert into usuario (email, senha) values (?, ?);");
+			prepareStatement = super.getConnection().prepareStatement("insert into usuario (email, senha) values (?, ?);");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
@@ -63,7 +51,7 @@ public class UsuarioDAO {
 	public Integer deletarTodos() throws SQLException, ClassNotFoundException{
 		PreparedStatement prepareStatement = null;
 		try {
-			prepareStatement = this.getConnection().prepareStatement("delete from usuario;");
+			prepareStatement = super.getConnection().prepareStatement("delete from usuario;");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
@@ -106,11 +94,11 @@ public class UsuarioDAO {
 				Usuario u = new Usuario(id, email, senha);
 				lu.add(u);
 			}
+			return lu;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
 		}
-		return lu;
 	}
 	
 }

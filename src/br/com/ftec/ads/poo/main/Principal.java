@@ -91,7 +91,7 @@ public class Principal {
 			return;
 		}
 		
-		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
 		try {
 			Integer deletarTodos = usuarioDAO.deletarTodos();
 			System.out.println("-> " + deletarTodos + " objetos deletados com sucesso");
@@ -103,10 +103,9 @@ public class Principal {
 	}
 
 	private static void selecionarTodosUsuarios() {
-		UsuarioDAO usuarioDAO = new UsuarioDAO();
-		List<Usuario> selecionarTodos;
+		UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
 		try {
-			selecionarTodos = usuarioDAO.selecionarTodos();
+			List<Usuario> selecionarTodos = usuarioDAO.selecionarTodos();
 			List<Exportavel> objetos = new ArrayList<Exportavel>(selecionarTodos);
 			listar(objetos);		
 		} catch (ClassNotFoundException e) {
@@ -130,10 +129,10 @@ public class Principal {
 			confirmarSenha = scanner.nextLine();
 		} while (!senha.equals(confirmarSenha));
 		Usuario usuario = new Usuario(email, senha);
-		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
 		try {
-			usuarioDAO.inserir(usuario);
-			System.out.println("-> Usuario inserido com sucesso");
+			Integer i = usuarioDAO.inserir(usuario);
+			System.out.println("-> " + i + " usuario inserido com sucesso");
 		} catch (ClassNotFoundException e) {
 			System.out.println("-> Erro ao inserir usuario: " + e.getMessage());
 		} catch (SQLException e) {
@@ -318,13 +317,13 @@ public class Principal {
 		System.out.println("=> Menu");
 		System.out.println("1. Criar usuario");
 		System.out.println("11. Criar livro");
-		System.out.println("111. Criar usuario");
+		System.out.println("111. Inserir usuario");
 		System.out.println("2. Listar usuarios");
 		System.out.println("22. Listar livros");
-		System.out.println("222. Listar usuarios");
+		System.out.println("222. Selecionar todos usuarios");
 		System.out.println("3. Deletar todos os usuarios");
 		System.out.println("33. Deletar todos os livros");
-		System.out.println("333. Deletar todos os usuarios");
+		System.out.println("333. Deletar todos os usuarios do BD");
 		System.out.println("4. Pesquisar usuarios");
 		System.out.println("5. Deletar usuarios");
 		System.out.println("6. Exportar usuarios");
