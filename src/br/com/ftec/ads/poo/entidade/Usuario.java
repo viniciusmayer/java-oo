@@ -1,6 +1,5 @@
 package br.com.ftec.ads.poo.entidade;
 
-import br.com.ftec.ads.poo.util.Utilitarios;
 
 public class Usuario extends Entidade {
 
@@ -11,8 +10,12 @@ public class Usuario extends Entidade {
 	}
 
 	public Usuario(String email, String senha) {
-		long nextLong = Utilitarios.nextLong();
-		this.setId(nextLong);
+		this.email = email;
+		this.senha = senha;
+	}
+	
+	public Usuario(Long id, String email, String senha) {
+		this.setId(id);
 		this.email = email;
 		this.senha = senha;
 	}

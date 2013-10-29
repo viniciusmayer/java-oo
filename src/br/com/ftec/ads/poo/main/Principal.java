@@ -7,10 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import br.com.ftec.ads.poo.dao.UsuarioDAO;
 import br.com.ftec.ads.poo.entidade.Exportavel;
 import br.com.ftec.ads.poo.entidade.Livro;
 import br.com.ftec.ads.poo.entidade.Usuario;
@@ -33,6 +35,9 @@ public class Principal {
 			case "11":
 				criarLivro(livros, scanner);
 				break;
+			case "111":
+				inserirUsuario(scanner);
+				break;
 			case "2":
 				objetosExportaveis = new ArrayList<Exportavel>(usuarios);
 				listar(objetosExportaveis);
@@ -41,11 +46,17 @@ public class Principal {
 				objetosExportaveis = new ArrayList<Exportavel>(livros);
 				listar(objetosExportaveis);
 				break;
+			case "222":
+				selecionarTodosUsuarios();
+				break;
 			case "3":
 				deletarTodos(usuarios, scanner);
 				break;
 			case "33":
 				deletarTodos(livros, scanner);
+				break;
+			case "333":
+				deletarTodosUsuarios(scanner);
 				break;
 			case "4":
 				pesquisar(usuarios, scanner);
@@ -68,6 +79,67 @@ public class Principal {
 				break;
 			}
 		} while (!opcao.equals("0"));
+	}
+
+	private static void deletarTodosUsuarios(Scanner scanner) {
+		System.out.println();
+		System.out.println("=> Deletar todos os objetos");
+		System.out.print("-> Confirmar a operacao? [sim]: ");
+		String confirmar = scanner.nextLine();
+		if (!confirmar.equalsIgnoreCase("sim")) {
+			System.out.println("-> Operacao cancelada");
+			return;
+		}
+		
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		try {
+			Integer deletarTodos = usuarioDAO.deletarTodos();
+			System.out.println("-> " + deletarTodos + " objetos deletados com sucesso");
+		} catch (ClassNotFoundException e) {
+			System.out.println("-> Erro ao deletar todos os usuários: " + e.getMessage());
+		} catch (SQLException e) {
+			System.out.println("-> Erro ao deletar todos os usuários: " + e.getMessage());
+		}
+	}
+
+	private static void selecionarTodosUsuarios() {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		List<Usuario> selecionarTodos;
+		try {
+			selecionarTodos = usuarioDAO.selecionarTodos();
+			List<Exportavel> objetos = new ArrayList<Exportavel>(selecionarTodos);
+			listar(objetos);		
+		} catch (ClassNotFoundException e) {
+			System.out.println("-> Erro ao selecionar todos os usuários: " + e.getMessage());
+		} catch (SQLException e) {
+			System.out.println("-> Erro ao selecionar todos os usuários: " + e.getMessage());
+		}
+	}
+
+	private static void inserirUsuario(Scanner scanner) {
+		System.out.println();
+		System.out.println("=> Inserir usuario");
+		System.out.print("-> Email: ");
+		String email = scanner.nextLine();
+		String senha = null;
+		String confirmarSenha = null;
+		do {
+			System.out.print("-> Senha: ");
+			senha = scanner.nextLine();
+			System.out.print("-> Confirmar senha: ");
+			confirmarSenha = scanner.nextLine();
+		} while (!senha.equals(confirmarSenha));
+		Usuario usuario = new Usuario(email, senha);
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		try {
+			usuarioDAO.inserir(usuario);
+			System.out.println("-> Usuario inserido com sucesso");
+		} catch (ClassNotFoundException e) {
+			System.out.println("-> Erro ao inserir usuario: " + e.getMessage());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("-> Erro ao inserir usuario: " + e.getMessage());
+		}
 	}
 
 	private static void importar(List<Usuario> usuarios, String nomeArquivo,
@@ -246,10 +318,13 @@ public class Principal {
 		System.out.println("=> Menu");
 		System.out.println("1. Criar usuario");
 		System.out.println("11. Criar livro");
+		System.out.println("111. Criar usuario");
 		System.out.println("2. Listar usuarios");
 		System.out.println("22. Listar livros");
+		System.out.println("222. Listar usuarios");
 		System.out.println("3. Deletar todos os usuarios");
 		System.out.println("33. Deletar todos os livros");
+		System.out.println("333. Deletar todos os usuarios");
 		System.out.println("4. Pesquisar usuarios");
 		System.out.println("5. Deletar usuarios");
 		System.out.println("6. Exportar usuarios");
