@@ -22,7 +22,6 @@ public class Principal {
 	public static void main(String[] args) {
 
 		List<Usuario> usuarios = new ArrayList<Usuario>();
-		List<Livro> livros = new ArrayList<Livro>();
 		List<Exportavel> objetosExportaveis = null;
 		Scanner scanner = new Scanner(System.in);
 		String opcao = null;
@@ -32,34 +31,15 @@ public class Principal {
 			case "1":
 				criarUsuario(usuarios, scanner);
 				break;
-			case "11":
-				criarLivro(livros, scanner);
-				break;
-			case "111":
-				inserirUsuario(scanner);
-				break;
 			case "2":
 				objetosExportaveis = new ArrayList<Exportavel>(usuarios);
 				listar(objetosExportaveis);
 				break;
-			case "22":
-				objetosExportaveis = new ArrayList<Exportavel>(livros);
-				listar(objetosExportaveis);
-				break;
-			case "222":
-				selecionarTodosUsuarios();
-				break;
 			case "3":
-				deletarTodos(usuarios, scanner);
-				break;
-			case "33":
-				deletarTodos(livros, scanner);
-				break;
-			case "333":
-				deletarTodosUsuarios(scanner);
+				deletarTodosUsuarios(usuarios, scanner);
 				break;
 			case "4":
-				pesquisar(usuarios, scanner);
+				pesquisarUsuarios(usuarios, scanner);
 				break;
 			case "5":
 				deletar(usuarios, scanner);
@@ -68,17 +48,87 @@ public class Principal {
 				objetosExportaveis = new ArrayList<Exportavel>(usuarios);
 				exportar(objetosExportaveis, "arquivos/usuarios.csv");
 				break;
-			case "66":
-				objetosExportaveis = new ArrayList<Exportavel>(livros);
-				exportar(objetosExportaveis, "arquivos/livros.csv");
-				break;
 			case "7":
-				importar(usuarios, "arquivos/usuarios.csv", scanner);
+				importarUsuarios(usuarios, "arquivos/usuarios.csv", scanner);
+				break;
+			case "8":
+				inserirUsuario(scanner);
+				break;
+			case "9":
+				selecionarTodosUsuarios();
+				break;
+			case "10":
+				deletarTodosUsuarios(scanner);
+				break;
+			case "11":
+				selecionarUsuarios(scanner);
+				break;
+			case "12":
+				deletarUsuarios(scanner);
 				break;
 			default:
 				break;
 			}
 		} while (!opcao.equals("0"));
+	}
+
+	private static void deletarUsuarios(Scanner scanner) {
+		try {
+			List<Usuario> us = pesquisarUsuariosParaDeletar(scanner);
+			List<Exportavel> objetos = new ArrayList<Exportavel>(us);
+			listar(objetos);
+			deletarUsuarios(us, scanner);
+		} catch (ClassNotFoundException e) {
+			System.out.println("-> Erro ao selecionar/deletar os usuários: " + e.getMessage());
+		} catch (SQLException e) {
+			System.out.println("-> Erro ao selecionar/deletar os usuários: " + e.getMessage());
+		}
+	}
+
+	private static List<Usuario> pesquisarUsuariosParaDeletar(Scanner scanner) throws ClassNotFoundException,
+			SQLException {
+		System.out.println();
+		System.out.println("=> Pesquisar usuarios");
+		System.out.print("Email: ");
+		String email = scanner.nextLine();
+
+		UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
+		List<Usuario> usuarios = usuarioDAO.selecionarPorEmail(email);
+		return usuarios;
+	}
+
+	private static void deletarUsuarios(List<Usuario> us, Scanner scanner) throws ClassNotFoundException, SQLException {
+		System.out.println();
+		System.out.println("=> Deletar os usuarios encontrados");
+		System.out.print("-> Confirmar a operacao? [sim]: ");
+		String confirmar = scanner.nextLine();
+		if (!confirmar.equalsIgnoreCase("sim")) {
+			System.out.println("-> Operacao cancelada");
+			return;
+		}
+
+		UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
+		Integer deletarTodos = usuarioDAO.deletar(us);
+		System.out.println("-> " + deletarTodos + " objetos deletados com sucesso");
+	}
+
+	private static void selecionarUsuarios(Scanner scanner) {
+		System.out.println();
+		System.out.println("=> Pesquisar usuarios");
+		System.out.print("Email: ");
+		String email = scanner.nextLine();
+
+		UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
+		try {
+			List<Usuario> usuarios = usuarioDAO.selecionarPorEmail(email);
+			List<Exportavel> objetos = new ArrayList<Exportavel>(usuarios);
+			listar(objetos);
+		} catch (ClassNotFoundException e) {
+			System.out.println("-> Erro ao selecionar os usuários: " + e.getMessage());
+		} catch (SQLException e) {
+			System.out.println("-> Erro ao selecionar os usuários: " + e.getMessage());
+		}
+
 	}
 
 	private static void deletarTodosUsuarios(Scanner scanner) {
@@ -90,7 +140,7 @@ public class Principal {
 			System.out.println("-> Operacao cancelada");
 			return;
 		}
-		
+
 		UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
 		try {
 			Integer deletarTodos = usuarioDAO.deletarTodos();
@@ -107,7 +157,7 @@ public class Principal {
 		try {
 			List<Usuario> selecionarTodos = usuarioDAO.selecionarTodos();
 			List<Exportavel> objetos = new ArrayList<Exportavel>(selecionarTodos);
-			listar(objetos);		
+			listar(objetos);
 		} catch (ClassNotFoundException e) {
 			System.out.println("-> Erro ao selecionar todos os usuários: " + e.getMessage());
 		} catch (SQLException e) {
@@ -141,8 +191,7 @@ public class Principal {
 		}
 	}
 
-	private static void importar(List<Usuario> usuarios, String nomeArquivo,
-			Scanner scanner) {
+	private static void importarUsuarios(List<Usuario> usuarios, String nomeArquivo, Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Importar usuarios");
 		System.out.println("-> Todos os usuarios existentes serao deletados.");
@@ -159,8 +208,7 @@ public class Principal {
 		try {
 			fileReader = new FileReader(file);
 		} catch (FileNotFoundException e) {
-			System.out
-					.println("-> Erro ao importar usuarios (arquivo nao encontrado): ");
+			System.out.println("-> Erro ao importar usuarios (arquivo nao encontrado): ");
 			e.printStackTrace();
 			return;
 		}
@@ -205,8 +253,7 @@ public class Principal {
 		}
 		try {
 			bufferedWriter.close();
-			System.out.println("-> Objetos exportados com sucesso: "
-					+ file.getAbsolutePath());
+			System.out.println("-> Objetos exportados com sucesso: " + file.getAbsolutePath());
 		} catch (IOException e) {
 			System.err.println("-> Erro ao exportar (salvar o arquivo): ");
 			e.printStackTrace();
@@ -228,8 +275,7 @@ public class Principal {
 			System.out.println("-> Nenhum usuario encontrado");
 			return;
 		}
-		System.out.println("-> " + usuariosParaDeletar.size()
-				+ " usuarios encontrados");
+		System.out.println("-> " + usuariosParaDeletar.size() + " usuarios encontrados");
 		System.out.print("-> Confirmar a operacao? [sim]: ");
 		String confirmar = scanner.nextLine();
 		if (!confirmar.equalsIgnoreCase("sim")) {
@@ -240,7 +286,7 @@ public class Principal {
 		System.out.println("-> Usuarios deletados com sucesso");
 	}
 
-	private static void pesquisar(List<Usuario> usuarios, Scanner scanner) {
+	private static void pesquisarUsuarios(List<Usuario> usuarios, Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Pesquisar usuarios");
 		boolean encontrou = false;
@@ -257,7 +303,7 @@ public class Principal {
 		}
 	}
 
-	private static void deletarTodos(List objetos, Scanner scanner) {
+	private static void deletarTodosUsuarios(List objetos, Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Deletar todos os objetos");
 		System.out.print("-> Confirmar a operacao? [sim]: ");
@@ -269,7 +315,7 @@ public class Principal {
 		objetos.clear();
 		System.out.println("-> Objetos deletados com sucesso");
 	}
-	
+
 	private static void listar(List<Exportavel> objetos) {
 		System.out.println();
 		System.out.println("=> Listar objetos");
@@ -277,7 +323,7 @@ public class Principal {
 			System.out.println("-> Nenhum usuario encontrado");
 			return;
 		}
-		for (Exportavel exportavel: objetos) {
+		for (Exportavel exportavel : objetos) {
 			System.out.println(exportavel.imprimir());
 		}
 	}
@@ -300,35 +346,24 @@ public class Principal {
 		System.out.println("-> Usuario criado com sucesso");
 	}
 
-	private static void criarLivro(List<Livro> livros, Scanner scanner) {
-		System.out.println();
-		System.out.println("=> Criar livro");
-		System.out.print("-> Titulo: ");
-		String tituto = scanner.nextLine();
-		System.out.print("-> Autor: ");
-		String autor = scanner.nextLine();
-		Livro livro = new Livro(tituto, autor);
-		livros.add(livro);
-		System.out.println("-> Livro criado com sucesso");
-	}
-
 	private static String menu(Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Menu");
+		System.out.println("-> Operacoes com usuario em memoria");
 		System.out.println("1. Criar usuario");
-		System.out.println("11. Criar livro");
-		System.out.println("111. Inserir usuario");
 		System.out.println("2. Listar usuarios");
-		System.out.println("22. Listar livros");
-		System.out.println("222. Selecionar todos usuarios");
 		System.out.println("3. Deletar todos os usuarios");
-		System.out.println("33. Deletar todos os livros");
-		System.out.println("333. Deletar todos os usuarios do BD");
 		System.out.println("4. Pesquisar usuarios");
 		System.out.println("5. Deletar usuarios");
+		System.out.println("-> Operacoes com usuario em memoria <-> arquivo");
 		System.out.println("6. Exportar usuarios");
-		System.out.println("66. Exportar livros");
 		System.out.println("7. Importar usuarios");
+		System.out.println("-> Operacoes com usuario em banco de dados");
+		System.out.println("8. Inserir usuario");
+		System.out.println("9. Selecionar todos usuarios");
+		System.out.println("10. Deletar todos os usuarios");
+		System.out.println("11. Selecionar usuarios");
+		System.out.println("12. Deletar usuarios");
 		System.out.println("0. Sair");
 		System.out.print("-> Digite a opcao desejada: ");
 		String opcao = scanner.nextLine();
