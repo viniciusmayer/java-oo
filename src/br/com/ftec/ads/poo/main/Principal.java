@@ -14,7 +14,6 @@ import java.util.Scanner;
 
 import br.com.ftec.ads.poo.dao.UsuarioDAO;
 import br.com.ftec.ads.poo.entidade.Exportavel;
-import br.com.ftec.ads.poo.entidade.Livro;
 import br.com.ftec.ads.poo.entidade.Usuario;
 
 public class Principal {
@@ -79,14 +78,13 @@ public class Principal {
 			listar(objetos);
 			deletarUsuarios(us, scanner);
 		} catch (ClassNotFoundException e) {
-			System.out.println("-> Erro ao selecionar/deletar os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao selecionar/deletar os usuï¿½rios: " + e.getMessage());
 		} catch (SQLException e) {
-			System.out.println("-> Erro ao selecionar/deletar os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao selecionar/deletar os usuï¿½rios: " + e.getMessage());
 		}
 	}
 
-	private static List<Usuario> pesquisarUsuariosParaDeletar(Scanner scanner) throws ClassNotFoundException,
-			SQLException {
+	private static List<Usuario> pesquisarUsuariosParaDeletar(Scanner scanner) throws ClassNotFoundException, SQLException {
 		System.out.println();
 		System.out.println("=> Pesquisar usuarios");
 		System.out.print("Email: ");
@@ -124,9 +122,9 @@ public class Principal {
 			List<Exportavel> objetos = new ArrayList<Exportavel>(usuarios);
 			listar(objetos);
 		} catch (ClassNotFoundException e) {
-			System.out.println("-> Erro ao selecionar os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao selecionar os usuï¿½rios: " + e.getMessage());
 		} catch (SQLException e) {
-			System.out.println("-> Erro ao selecionar os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao selecionar os usuï¿½rios: " + e.getMessage());
 		}
 
 	}
@@ -146,9 +144,9 @@ public class Principal {
 			Integer deletarTodos = usuarioDAO.deletarTodos();
 			System.out.println("-> " + deletarTodos + " objetos deletados com sucesso");
 		} catch (ClassNotFoundException e) {
-			System.out.println("-> Erro ao deletar todos os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao deletar todos os usuï¿½rios: " + e.getMessage());
 		} catch (SQLException e) {
-			System.out.println("-> Erro ao deletar todos os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao deletar todos os usuï¿½rios: " + e.getMessage());
 		}
 	}
 
@@ -159,9 +157,9 @@ public class Principal {
 			List<Exportavel> objetos = new ArrayList<Exportavel>(selecionarTodos);
 			listar(objetos);
 		} catch (ClassNotFoundException e) {
-			System.out.println("-> Erro ao selecionar todos os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao selecionar todos os usuï¿½rios: " + e.getMessage());
 		} catch (SQLException e) {
-			System.out.println("-> Erro ao selecionar todos os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao selecionar todos os usuï¿½rios: " + e.getMessage());
 		}
 	}
 

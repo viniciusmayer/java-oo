@@ -8,23 +8,24 @@ import java.util.List;
 
 import br.com.ftec.ads.poo.entidade.Usuario;
 
-public class UsuarioDAO extends BaseDAO{
+public class UsuarioDAO extends BaseDAO {
 
 	private static UsuarioDAO usuarioDAO;
 
 	/*
 	 * factory method
 	 */
-	public static UsuarioDAO getInstance(){
-		if (usuarioDAO == null){
+	public static UsuarioDAO getInstance() {
+		if (usuarioDAO == null) {
 			usuarioDAO = new UsuarioDAO();
 		}
 		return usuarioDAO;
 	}
-	
-	private UsuarioDAO() {}	
-	
-	public Integer inserir(Usuario usuario) throws SQLException, ClassNotFoundException{
+
+	private UsuarioDAO() {
+	}
+
+	public Integer inserir(Usuario usuario) throws SQLException, ClassNotFoundException {
 		PreparedStatement prepareStatement = null;
 		try {
 			prepareStatement = super.getConnection().prepareStatement("insert into usuario (email, senha) values (?, ?);");
@@ -47,8 +48,8 @@ public class UsuarioDAO extends BaseDAO{
 			throw e;
 		}
 	}
-	
-	public Integer deletarTodos() throws SQLException, ClassNotFoundException{
+
+	public Integer deletarTodos() throws SQLException, ClassNotFoundException {
 		PreparedStatement prepareStatement = null;
 		try {
 			prepareStatement = super.getConnection().prepareStatement("delete from usuario;");
@@ -64,8 +65,8 @@ public class UsuarioDAO extends BaseDAO{
 			throw e;
 		}
 	}
-	
-	public List<Usuario> selecionarTodos() throws SQLException, ClassNotFoundException{
+
+	public List<Usuario> selecionarTodos() throws SQLException, ClassNotFoundException {
 		PreparedStatement prepareStatement = null;
 		try {
 			prepareStatement = this.getConnection().prepareStatement("select * from usuario;");
@@ -76,7 +77,7 @@ public class UsuarioDAO extends BaseDAO{
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 		ResultSet executeQuery = null;
 		try {
 			executeQuery = prepareStatement.executeQuery();
@@ -84,10 +85,10 @@ public class UsuarioDAO extends BaseDAO{
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 		List<Usuario> lu = new ArrayList<Usuario>();
 		try {
-			while (executeQuery.next()){
+			while (executeQuery.next()) {
 				long id = executeQuery.getLong("id");
 				String email = executeQuery.getString("email");
 				String senha = executeQuery.getString("senha");
@@ -112,7 +113,7 @@ public class UsuarioDAO extends BaseDAO{
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 		ResultSet executeQuery = null;
 		try {
 			executeQuery = prepareStatement.executeQuery();
@@ -120,10 +121,10 @@ public class UsuarioDAO extends BaseDAO{
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 		List<Usuario> lu = new ArrayList<Usuario>();
 		try {
-			while (executeQuery.next()){
+			while (executeQuery.next()) {
 				long id = executeQuery.getLong("id");
 				String emailUsuario = executeQuery.getString("email");
 				String senha = executeQuery.getString("senha");
@@ -144,15 +145,15 @@ public class UsuarioDAO extends BaseDAO{
 			ids += ",";
 		}
 		ids = ids.substring(0, ids.length() - 1);
-		
+
 		PreparedStatement prepareStatement = null;
 		try {
-			prepareStatement = super.getConnection().prepareStatement("delete from usuario where id in ("+ids+");");
+			prepareStatement = super.getConnection().prepareStatement("delete from usuario where id in (" + ids + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
 		}
-		
+
 		try {
 			int executeUpdate = prepareStatement.executeUpdate();
 			return executeUpdate;
@@ -161,5 +162,5 @@ public class UsuarioDAO extends BaseDAO{
 			throw e;
 		}
 	}
-	
+
 }

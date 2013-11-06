@@ -1,6 +1,6 @@
 package br.com.ftec.ads.poo.entidade;
 
-public abstract class Entidade implements Exportavel{
+public abstract class Entidade implements Exportavel {
 
 	private Long id;
 

@@ -1,6 +1,5 @@
 package br.com.ftec.ads.poo.entidade;
 
-
 public class Usuario extends Entidade {
 
 	private String email;
@@ -13,7 +12,7 @@ public class Usuario extends Entidade {
 		this.email = email;
 		this.senha = senha;
 	}
-	
+
 	public Usuario(Long id, String email, String senha) {
 		this.setId(id);
 		this.email = email;

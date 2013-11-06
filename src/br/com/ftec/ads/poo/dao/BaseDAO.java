@@ -22,8 +22,7 @@ public abstract class BaseDAO {
 		 */
 		Connection connection = null;
 		try {
-			connection = DriverManager
-					.getConnection("jdbc:postgresql://localhost:5432/poodb", "poouser", "poopassword");
+			connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/poodb", "poouser", "poopassword");
 			return connection;
 		} catch (SQLException e) {
 			e.printStackTrace();
