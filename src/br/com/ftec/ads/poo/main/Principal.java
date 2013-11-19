@@ -18,6 +18,8 @@ import br.com.ftec.ads.poo.entidade.Usuario;
 
 public class Principal {
 
+	private static final String ARQUIVOS_USUARIOS_CSV = "arquivos/usuarios.csv";
+
 	public static void main(String[] args) {
 
 		List<Usuario> usuarios = new ArrayList<Usuario>();
@@ -45,10 +47,10 @@ public class Principal {
 				break;
 			case "6":
 				objetosExportaveis = new ArrayList<Exportavel>(usuarios);
-				exportar(objetosExportaveis, "arquivos/usuarios.csv");
+				exportar(objetosExportaveis, ARQUIVOS_USUARIOS_CSV);
 				break;
 			case "7":
-				importarUsuarios(usuarios, "arquivos/usuarios.csv", scanner);
+				importar(usuarios, ARQUIVOS_USUARIOS_CSV, scanner);
 				break;
 			case "8":
 				inserirUsuario(scanner);
@@ -65,10 +67,49 @@ public class Principal {
 			case "12":
 				deletarUsuarios(scanner);
 				break;
+			case "13":
+				exportarUsuarios();
+				break;
+			case "14":
+				importarUsuarios(usuarios, scanner);
+				break;
 			default:
 				break;
 			}
 		} while (!opcao.equals("0"));
+	}
+
+	private static void importarUsuarios(List<Usuario> usuarios, Scanner scanner) {
+		importar(usuarios, ARQUIVOS_USUARIOS_CSV, scanner);
+		UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
+		Integer i = 0;
+		for (Usuario usuario: usuarios) {
+			try {
+				i += usuarioDAO.inserir(usuario);
+			} catch (ClassNotFoundException e) {
+				System.err.println("-> Erro ao inserir usuarios: " + e.getMessage());
+				e.printStackTrace();
+				return;
+			} catch (SQLException e) {
+				System.err.println("-> Erro ao inserir usuarios: " + e.getMessage());
+				e.printStackTrace();
+				return;
+			}
+		}
+		System.out.println("-> "+i+" usuarios inseridos com sucesso");
+	}
+
+	private static void exportarUsuarios() {
+		UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
+		try {
+			List<Usuario> selecionarTodos = usuarioDAO.selecionarTodos();
+			List<Exportavel> objetos = new ArrayList<Exportavel>(selecionarTodos);
+			exportar(objetos, ARQUIVOS_USUARIOS_CSV);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void deletarUsuarios(Scanner scanner) {
@@ -78,9 +119,11 @@ public class Principal {
 			listar(objetos);
 			deletarUsuarios(us, scanner);
 		} catch (ClassNotFoundException e) {
-			System.out.println("-> Erro ao selecionar/deletar os usuï¿½rios: " + e.getMessage());
+			e.printStackTrace();
+			System.out.println("-> Erro ao selecionar/deletar os usuários: " + e.getMessage());
 		} catch (SQLException e) {
-			System.out.println("-> Erro ao selecionar/deletar os usuï¿½rios: " + e.getMessage());
+			e.printStackTrace();
+			System.out.println("-> Erro ao selecionar/deletar os usuários: " + e.getMessage());
 		}
 	}
 
@@ -122,9 +165,11 @@ public class Principal {
 			List<Exportavel> objetos = new ArrayList<Exportavel>(usuarios);
 			listar(objetos);
 		} catch (ClassNotFoundException e) {
-			System.out.println("-> Erro ao selecionar os usuï¿½rios: " + e.getMessage());
+			System.err.println("-> Erro ao selecionar os usuários: " + e.getMessage());
+			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("-> Erro ao selecionar os usuï¿½rios: " + e.getMessage());
+			System.err.println("-> Erro ao selecionar os usuários: " + e.getMessage());
+			e.printStackTrace();
 		}
 
 	}
@@ -144,9 +189,11 @@ public class Principal {
 			Integer deletarTodos = usuarioDAO.deletarTodos();
 			System.out.println("-> " + deletarTodos + " objetos deletados com sucesso");
 		} catch (ClassNotFoundException e) {
-			System.out.println("-> Erro ao deletar todos os usuï¿½rios: " + e.getMessage());
+			System.err.println("-> Erro ao deletar todos os usuários: " + e.getMessage());
+			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("-> Erro ao deletar todos os usuï¿½rios: " + e.getMessage());
+			System.err.println("-> Erro ao deletar todos os usuários: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -157,9 +204,11 @@ public class Principal {
 			List<Exportavel> objetos = new ArrayList<Exportavel>(selecionarTodos);
 			listar(objetos);
 		} catch (ClassNotFoundException e) {
-			System.out.println("-> Erro ao selecionar todos os usuï¿½rios: " + e.getMessage());
+			System.err.println("-> Erro ao selecionar todos os usuários: " + e.getMessage());
+			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("-> Erro ao selecionar todos os usuï¿½rios: " + e.getMessage());
+			System.err.println("-> Erro ao selecionar todos os usuários: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -182,14 +231,15 @@ public class Principal {
 			Integer i = usuarioDAO.inserir(usuario);
 			System.out.println("-> " + i + " usuario inserido com sucesso");
 		} catch (ClassNotFoundException e) {
-			System.out.println("-> Erro ao inserir usuario: " + e.getMessage());
-		} catch (SQLException e) {
+			System.err.println("-> Erro ao inserir usuario: " + e.getMessage());
 			e.printStackTrace();
-			System.out.println("-> Erro ao inserir usuario: " + e.getMessage());
+		} catch (SQLException e) {
+			System.err.println("-> Erro ao inserir usuario: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
-	private static void importarUsuarios(List<Usuario> usuarios, String nomeArquivo, Scanner scanner) {
+	private static void importar(List<Usuario> usuarios, String nomeArquivo, Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Importar usuarios");
 		System.out.println("-> Todos os usuarios existentes serao deletados.");
@@ -206,7 +256,7 @@ public class Principal {
 		try {
 			fileReader = new FileReader(file);
 		} catch (FileNotFoundException e) {
-			System.out.println("-> Erro ao importar usuarios (arquivo nao encontrado): ");
+			System.err.println("-> Erro ao importar usuarios (arquivo nao encontrado): " + e.getMessage());
 			e.printStackTrace();
 			return;
 		}
@@ -215,14 +265,16 @@ public class Principal {
 		try {
 			while ((readLine = bufferedReader.readLine()) != null) {
 				String[] split = readLine.split(";");
-				String email = split[0];
-				String senha = split[1];
-				Usuario usuario = new Usuario(email, senha);
+				String idAsString = split[0];
+				Long id = new Long(idAsString);
+				String email = split[1];
+				String senha = split[2];
+				Usuario usuario = new Usuario(id, email, senha);
 				usuarios.add(usuario);
 			}
 			System.out.println("-> Usuarios importados com sucesso");
 		} catch (IOException e) {
-			System.out.println("-> Erro ao importar usuarios (ler arquivo): ");
+			System.err.println("-> Erro ao importar usuarios (ler arquivo): " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -235,7 +287,7 @@ public class Principal {
 		try {
 			fileWriter = new FileWriter(file);
 		} catch (IOException e) {
-			System.err.println("-> Erro ao exportar (criar o arquivo): ");
+			System.err.println("-> Erro ao exportar (criar o arquivo): " + e.getMessage());
 			e.printStackTrace();
 			return;
 		}
@@ -245,7 +297,7 @@ public class Principal {
 				bufferedWriter.write(exportavel.exportar());
 			}
 		} catch (IOException e) {
-			System.err.println("-> Erro ao exportar (escrever no arquivo): ");
+			System.err.println("-> Erro ao exportar (escrever no arquivo): " + e.getMessage());
 			e.printStackTrace();
 			return;
 		}
@@ -253,7 +305,7 @@ public class Principal {
 			bufferedWriter.close();
 			System.out.println("-> Objetos exportados com sucesso: " + file.getAbsolutePath());
 		} catch (IOException e) {
-			System.err.println("-> Erro ao exportar (salvar o arquivo): ");
+			System.err.println("-> Erro ao exportar (salvar o arquivo): " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -347,21 +399,24 @@ public class Principal {
 	private static String menu(Scanner scanner) {
 		System.out.println();
 		System.out.println("=> Menu");
-		System.out.println("-> Operacoes com usuario em memoria");
+		System.out.println("--> Operacoes com usuario em memoria");
 		System.out.println("1. Criar usuario");
 		System.out.println("2. Listar usuarios");
 		System.out.println("3. Deletar todos os usuarios");
 		System.out.println("4. Pesquisar usuarios");
 		System.out.println("5. Deletar usuarios");
-		System.out.println("-> Operacoes com usuario em memoria <-> arquivo");
+		System.out.println("--> Operacoes com usuario em memoria <-> arquivo");
 		System.out.println("6. Exportar usuarios");
 		System.out.println("7. Importar usuarios");
-		System.out.println("-> Operacoes com usuario em banco de dados");
+		System.out.println("--> Operacoes com usuario em memoria <-> banco de dados");
 		System.out.println("8. Inserir usuario");
 		System.out.println("9. Selecionar todos usuarios");
 		System.out.println("10. Deletar todos os usuarios");
 		System.out.println("11. Selecionar usuarios");
 		System.out.println("12. Deletar usuarios");
+		System.out.println("--> Operacoes com usuario em arquivo <-> banco de dados");
+		System.out.println("13. Exportar usuarios de banco de dados para arquivo");
+		System.out.println("14. Importar usuarios de arquivo para banco de dados");
 		System.out.println("0. Sair");
 		System.out.print("-> Digite a opcao desejada: ");
 		String opcao = scanner.nextLine();

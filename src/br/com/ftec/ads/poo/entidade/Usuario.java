@@ -38,7 +38,11 @@ public class Usuario extends Entidade {
 	public String imprimir() {
 		String imprimir = "";
 		imprimir += "Id: ";
-		imprimir += this.getId();
+		if (this.getId() != null) {
+			imprimir += this.getId();
+		} else {
+			imprimir += "-";
+		}
 		imprimir += "\n";
 		imprimir += "Email: ";
 		imprimir += this.email;
@@ -51,7 +55,9 @@ public class Usuario extends Entidade {
 
 	public String exportar() {
 		String exportar = "";
-		exportar += this.getId();
+		if (this.getId() != null) {
+			exportar += this.getId();
+		}
 		exportar += ";";
 		exportar += this.email;
 		exportar += ";";
