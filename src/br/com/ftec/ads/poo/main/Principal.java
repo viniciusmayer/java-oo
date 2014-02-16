@@ -120,10 +120,10 @@ public class Principal {
 			deletarUsuarios(us, scanner);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("-> Erro ao selecionar/deletar os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao selecionar/deletar os usuarios: " + e.getMessage());
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("-> Erro ao selecionar/deletar os usuários: " + e.getMessage());
+			System.out.println("-> Erro ao selecionar/deletar os usuarios: " + e.getMessage());
 		}
 	}
 
@@ -165,10 +165,10 @@ public class Principal {
 			List<Exportavel> objetos = new ArrayList<Exportavel>(usuarios);
 			listar(objetos);
 		} catch (ClassNotFoundException e) {
-			System.err.println("-> Erro ao selecionar os usuários: " + e.getMessage());
+			System.err.println("-> Erro ao selecionar os usuarios: " + e.getMessage());
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.err.println("-> Erro ao selecionar os usuários: " + e.getMessage());
+			System.err.println("-> Erro ao selecionar os usuarios: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -189,10 +189,10 @@ public class Principal {
 			Integer deletarTodos = usuarioDAO.deletarTodos();
 			System.out.println("-> " + deletarTodos + " objetos deletados com sucesso");
 		} catch (ClassNotFoundException e) {
-			System.err.println("-> Erro ao deletar todos os usuários: " + e.getMessage());
+			System.err.println("-> Erro ao deletar todos os usuarios: " + e.getMessage());
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.err.println("-> Erro ao deletar todos os usuários: " + e.getMessage());
+			System.err.println("-> Erro ao deletar todos os usuarios: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -204,10 +204,10 @@ public class Principal {
 			List<Exportavel> objetos = new ArrayList<Exportavel>(selecionarTodos);
 			listar(objetos);
 		} catch (ClassNotFoundException e) {
-			System.err.println("-> Erro ao selecionar todos os usuários: " + e.getMessage());
+			System.err.println("-> Erro ao selecionar todos os usuarios: " + e.getMessage());
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.err.println("-> Erro ao selecionar todos os usuários: " + e.getMessage());
+			System.err.println("-> Erro ao selecionar todos os usuarios: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
